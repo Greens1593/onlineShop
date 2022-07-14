@@ -6,6 +6,7 @@ const cardRouters = require('./routers/card.js');
 const coursesRouters = require('./routers/courses.js');
 const addRouters = require('./routers/add.js');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -28,9 +29,21 @@ app.use('/add', addRouters);
 app.use('/card', cardRouters);
 
 
+const pasword = 'y98QNb2JGHoFKyjq'
 
 
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT, () => 
-console.log(`Server is runing on PORT ${PORT}`))
+async function start () {
+   try {
+    const dbUrl = 'mongodb+srv://greens1593:y98QNb2JGHoFKyjq@cluster0.cqytwgl.mongodb.net/?retryWrites=true&w=majority'
+    await mongoose.connect(dbUrl, {useNewUrlParser: true})
+    app.listen(PORT, () => 
+    console.log(`Server is runing on PORT ${PORT}`))
+}
+catch(e){
+    console.log(e)
+}
+}
+
+start()
