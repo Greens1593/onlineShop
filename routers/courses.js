@@ -3,7 +3,10 @@ const Course = require('../models/course')
 const router = Router()
 
 router.get('/', async (req, res) =>{
-    const courses = await Course.find();
+    const courses = await Course.find()
+    .populate('userId', 'email name') // получение по id данных пользователя
+    .select('price title img') // Доступ к елементам курса, не обезательно
+
     res.render('courses', {
         title: 'Курсы',
         isCourses: true,

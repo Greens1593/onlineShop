@@ -11,6 +11,7 @@ const cardRouters = require('./routers/card.js');
 const coursesRouters = require('./routers/courses.js');
 const addRouters = require('./routers/add.js');
 
+const User = require('./models/user.js')
 
 const app = express();
 
@@ -23,6 +24,17 @@ const hbs = exphbs.create({
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', 'views');
+
+app.use(async (req, res, next) => {
+    try {
+        const user = await User.findById('62d2a0c213898d05b366621f')
+        req.user = user
+    }
+    catch(e){
+        console.log(e)
+    }
+    next()
+})
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -40,16 +52,25 @@ const PORT = process.env.PORT || 3000
 
 async function start () {
    try {
-    const dbUrl = 'mongodb+srv://greens1593:y98QNb2JGHoFKyjq@cluster0.cqytwgl.mongodb.net/onlineShop'
-    await mongoose.connect(dbUrl, {
-        useNewUrlParser: true
-    })
-    app.listen(PORT, () => 
-    console.log(`Server is runing on PORT ${PORT}`))
-}
-catch(e){
-    console.log(e)
-}
+        const dbUrl = 'mongodb+srv://greens1593:y98QNb2JGHoFKyjq@cluster0.cqytwgl.mongodb.net/onlineShop'
+        await mongoose.connect(dbUrl, {
+            useNewUrlParser: true
+            })
+        const candidate = await User.findOne()
+        if(!candidate){
+            const user = new User({
+                email: 'green@example.com',
+                name: 'Mikle',
+                cart: {items: []}
+            })
+        await user.save()
+        }
+        app.listen(PORT, () => 
+        console.log(`Server is runing on PORT ${PORT}`))
+    }
+    catch(e){
+        console.log(e)
+    }
 }
 
 start()
