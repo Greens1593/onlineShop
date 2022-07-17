@@ -7,15 +7,15 @@ const renderCard = card => {
 
 <td>${c.title}</td>
 <td>
-<a class="waves-effect waves-teal btn-flat material-icons" data-id="${c._id}">arrow_drop_up</a>
+<a class="waves-effect waves-teal btn-flat material-icons" data-id="${c.id}">arrow_drop_up</a>
 <br>
 <a class="counter"> ${c.count} </a>
 <br>
-<a class="waves-effect waves-teal btn-flat material-icons" data-id="${c._id}">arrow_drop_down</a>
+<a class="waves-effect waves-teal btn-flat material-icons" data-id="${c.id}">arrow_drop_down</a>
 </td>
 <td>
     <form action="/card/delete" method="post">
-    <input type="hidden" name="id" value="${c._id}">
+    <input type="hidden" name="id" value="${c.id}">
     <button class="btn btn-small">Удалить</button>
     </form>
 </td>
@@ -34,8 +34,24 @@ const toCurrensy = price =>{
         currency: 'UAH',
     }).format(price)
 }
+
+const toDate = date => {
+    return new Intl.DateTimeFormat('uk', {
+        day: '2-digit',
+        month: 'long',
+        year: "numeric",
+        hour: "2-digit",
+        minute: '2-digit',
+        second: '2-digit'
+    }).format(new Date(date))
+}
+
 document.querySelectorAll('.price').forEach(node =>{
     node.textContent = toCurrensy(node.textContent)
+})
+
+document.querySelectorAll('.date').forEach(node =>{
+    node.textContent = toDate(node.textContent)
 })
 
 const $card = document.querySelector('#card')

@@ -10,6 +10,7 @@ const homeRouters = require('./routers/home.js');
 const cardRouters = require('./routers/card.js');
 const coursesRouters = require('./routers/courses.js');
 const addRouters = require('./routers/add.js');
+const ordersRouters = require('./routers/orders.js');
 
 const User = require('./models/user.js')
 
@@ -43,6 +44,7 @@ app.use('/', homeRouters);
 app.use('/courses', coursesRouters);
 app.use('/add', addRouters);
 app.use('/card', cardRouters);
+app.use('/orders', ordersRouters);
 
 
 const pasword = 'y98QNb2JGHoFKyjq'
