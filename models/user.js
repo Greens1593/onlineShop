@@ -29,10 +29,6 @@ const userSchema = new Schema({
 })
 
 userSchema.methods.addToCart = function(course){
-<<<<<<< HEAD
-=======
-    console.log(course)
->>>>>>> 192737ca9728d40b8eb6f96709aa0898c672f84c
     const clonedItems = [...this.cart.items]
     const index = clonedItems.findIndex(c =>{
         return c.courseId.toString() === course._id.toString()
@@ -52,7 +48,6 @@ userSchema.methods.addToCart = function(course){
     return this.save()
 }
 
-<<<<<<< HEAD
 userSchema.methods.removeFromCart = function(id){
     let items = [...this.cart.items]
     const index = items.findIndex(c => c.courseId.toString() === id.toString())
@@ -72,6 +67,4 @@ userSchema.methods.removeCartItem = function(id){
     return this.save()
 }
 
-=======
->>>>>>> 192737ca9728d40b8eb6f96709aa0898c672f84c
 module.exports = model('User', userSchema)
