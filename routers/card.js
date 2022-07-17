@@ -21,27 +21,38 @@ router.post('/add', async (req, res)=>{
 })
 
 router.post('/counter-plus', async (req, res)=>{
-    const course = await Course.getCourseById(req.body.id);
-    const card = await Card.add(course);
-    res.status(200).json(card)
+    const course = await Course.findById(req.body.id);
+    const user = await req.user.addToCart(course)
+    await user.populate('cart.items.courseId')
+    const courses = mapCartItems(user.cart)
+    const cart = {
+        courses: courses,
+        price: computePrice(courses)
+    }
+    res.status(200).json(cart)
 })
 
 router.post('/delete', async (req, res)=>{
-    await Card.deleteCardItem(req.body.id);
+    await req.user.removeCartItem(req.body.id)
     res.redirect('/card')
 })
 
 router.delete('/remove/:id', async (req, res) =>{
-    const card = await Card.remove(req.params.id);
-    res.status(200).json(card)
+    await req.user.removeFromCart(req.params.id)
+    const user = await req.user.populate('cart.items.courseId')
+
+    const courses = mapCartItems(user.cart)
+    const cart = {
+        courses, price: computePrice(courses)
+    }
+
+    res.status(200).json(cart)
 })
 
 router.get('/', async (req, res) => {
     const user = await req.user
         .populate('cart.items.courseId')
-
     const courses = mapCartItems(user.cart)
-
     res.render('card', {
         title: 'Корзина',
         isCard: true,

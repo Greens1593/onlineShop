@@ -29,7 +29,6 @@ const userSchema = new Schema({
 })
 
 userSchema.methods.addToCart = function(course){
-    console.log(course)
     const clonedItems = [...this.cart.items]
     const index = clonedItems.findIndex(c =>{
         return c.courseId.toString() === course._id.toString()
@@ -46,6 +45,25 @@ userSchema.methods.addToCart = function(course){
 
     const newCart = {items: clonedItems}
     this.cart = newCart
+    return this.save()
+}
+
+userSchema.methods.removeFromCart = function(id){
+    let items = [...this.cart.items]
+    const index = items.findIndex(c => c.courseId.toString() === id.toString())
+    if(items[index].count === 1){
+        items = items.filter(c => c.courseId.toString() !== id.toString())
+    } else {
+        items[index].count--
+    }
+    this.cart = {items}
+    return this.save()
+}
+
+userSchema.methods.removeCartItem = function(id){
+    let items = [...this.cart.items]
+    items = items.filter(c => c.courseId.toString() !== id.toString())
+    this.cart = {items}
     return this.save()
 }
 
