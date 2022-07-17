@@ -1,4 +1,8 @@
 const {Router} = require('express');
+<<<<<<< HEAD
+=======
+const course = require('../models/course');
+>>>>>>> 192737ca9728d40b8eb6f96709aa0898c672f84c
 const Course = require('../models/course');
 const router = Router();
 
@@ -52,7 +56,13 @@ router.delete('/remove/:id', async (req, res) =>{
 router.get('/', async (req, res) => {
     const user = await req.user
         .populate('cart.items.courseId')
+<<<<<<< HEAD
     const courses = mapCartItems(user.cart)
+=======
+
+    const courses = mapCartItems(user.cart)
+
+>>>>>>> 192737ca9728d40b8eb6f96709aa0898c672f84c
     res.render('card', {
         title: 'Корзина',
         isCard: true,
