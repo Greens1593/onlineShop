@@ -11,6 +11,7 @@ const cardRouters = require('./routers/card.js');
 const coursesRouters = require('./routers/courses.js');
 const addRouters = require('./routers/add.js');
 const ordersRouters = require('./routers/orders.js');
+const authRouters = require('./routers/auth.js');
 
 const User = require('./models/user.js')
 
@@ -40,11 +41,13 @@ app.use(async (req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 app.use('/', homeRouters);
 app.use('/courses', coursesRouters);
 app.use('/add', addRouters);
 app.use('/card', cardRouters);
 app.use('/orders', ordersRouters);
+app.use('/auth', authRouters);
 
 
 const pasword = 'y98QNb2JGHoFKyjq'

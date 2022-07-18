@@ -80,3 +80,5 @@ if ($card){
                 .then(card => renderCard(card))
             }}})
             }
+
+M.Tabs.init(document.querySelectorAll('.tabs'))
