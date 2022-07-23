@@ -30,7 +30,8 @@ router.post('/counter-plus', auth, async (req, res)=>{
     const courses = mapCartItems(user.cart)
     const cart = {
         courses: courses,
-        price: computePrice(courses)
+        price: computePrice(courses),
+        csrf: req.csrfToken()
     }
     res.status(200).json(cart)
 })
@@ -46,9 +47,10 @@ router.delete('/remove/:id', auth, async (req, res) =>{
 
     const courses = mapCartItems(user.cart)
     const cart = {
-        courses, price: computePrice(courses)
+        courses, 
+        price: computePrice(courses),
+        csrf: req.csrfToken()
     }
-
     res.status(200).json(cart)
 })
 

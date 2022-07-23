@@ -20,6 +20,7 @@
         <span class="helper-text" data-error="Введите путь к картинке"></span>
     </div>
 <input type="hidden" name="id" value="{{course.id}}">
+<input type="hidden" name="_csrf" value="{{csrf}}">
 
 <button type="submit" class="btn btn-primary">Редактировать курс</button>
 </form>
@@ -27,6 +28,7 @@
 <div class="delet-button">
 <form action="/courses/delet" method="POST">
 <input type="hidden" name="id" value="{{course.id}}">
+<input type="hidden" name="_csrf" value="{{csrf}}">
 <button class="waves-effect waves-teal btn-flat">Удалить курс</button>
 </form>
 </div>

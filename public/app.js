@@ -1,21 +1,23 @@
 
-const renderCard = card => {
+const renderCard = (card) => {
         if(card.courses.length){
+            const csrf = card.csrf
             const html = card.courses.map(c => {
                 return `
 <tr>
 
 <td>${c.title}</td>
 <td>
-<a class="waves-effect waves-teal btn-flat material-icons" data-id="${c.id}">arrow_drop_up</a>
+<a class="waves-effect waves-teal btn-flat material-icons" data-id="${c.id}" data-csrf="${csrf}">arrow_drop_up</a>
 <br>
 <a class="counter"> ${c.count} </a>
 <br>
-<a class="waves-effect waves-teal btn-flat material-icons" data-id="${c.id}">arrow_drop_down</a>
+<a class="waves-effect waves-teal btn-flat material-icons" data-id="${c.id}" data-csrf="${csrf}">arrow_drop_down</a>
 </td>
 <td>
     <form action="/card/delete" method="post">
     <input type="hidden" name="id" value="${c.id}">
+    <input type="hidden" name="_csrf" value="${csrf}">
     <button class="btn btn-small">Удалить</button>
     </form>
 </td>
@@ -59,20 +61,26 @@ if ($card){
     $card.addEventListener('click', event =>{
         if(event.target.classList.contains('material-icons')){
             const id = event.target.dataset.id;
+            const csrf = event.target.dataset.csrf;
+
             const plusOrMinus = event.target.textContent;
             if(plusOrMinus === 'arrow_drop_down'){
                 fetch('/card/remove/' + id, {
-                    method: 'delete'
+                    method: 'delete',
+                    headers: {
+                        'X-XSRF-TOKEN': csrf,
+                    }
                 }).then(res => res.json())
                 .then(card => renderCard(card))
             } 
             else if (plusOrMinus === 'arrow_drop_up') {
                 fetch('card/counter-plus', {
                     method: 'POST',
-                    headers: new Headers({
+                    headers: {
                       Accept: 'application/json',
-                      'Content-Type': 'application/json'
-                    }),
+                      'Content-Type': 'application/json',
+                      'X-XSRF-TOKEN': csrf,
+                    },
                     mode: 'same-origin',
                     body: JSON.stringify({ id: id })
                 })

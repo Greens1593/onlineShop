@@ -16,15 +16,16 @@
             
             <td>{{title}}</td>
             <td>
-            <a class="waves-effect waves-teal btn-flat material-icons" data-id="{{id}}">arrow_drop_up</a>
+            <a class="waves-effect waves-teal btn-flat material-icons" data-id="{{id}}" data-csrf="{{@root.csrf}}">arrow_drop_up</a>
             <br>
             <a class="counter"> {{count}} </a>
             <br>
-            <a class="waves-effect waves-teal btn-flat material-icons" data-id="{{id}}">arrow_drop_down</a>
+            <a class="waves-effect waves-teal btn-flat material-icons" data-id="{{id}}" data-csrf="{{@root.csrf}}">arrow_drop_down</a>
             </td>
             <td>
                 <form action="/card/delete" method="post">
                 <input type="hidden" name="id" value="{{id}}">
+                <input type="hidden" name="_csrf" value="{{@root.csrf}}">
                 <button class="btn btn-small">Удалить</button>
                 </form>
             </td>
@@ -35,6 +36,7 @@
 <p><strong>Цена:  </strong><span class="price">{{price}}</span></p>
 </div>
 <form action="/orders" method="post">
+    <input type="hidden" name="_csrf" value="{{csrf}}">
     <button type="submit" class="btn">Сделать заказ</button>
 </form>
 {{else}}
