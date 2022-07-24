@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
-const csrf = require('csurf')
+const csrf = require('csurf');
+const flash = require('connect-flash');
 const exphbs = require('express-handlebars');
 const _handlebars = require('handlebars');
 const bodyParser = require('body-parser');
@@ -48,7 +49,7 @@ app.use(session({
     store,
 }))
 app.use(csrf())
-
+app.use(flash())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
