@@ -10,6 +10,8 @@ const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-ac
 const session = require('express-session');
 const MongoStore = require('connect-mongodb-session')(session)
 
+const keys = require('./keys/index.js')
+
 const homeRouters = require('./routers/home.js');
 const cardRouters = require('./routers/card.js');
 const coursesRouters = require('./routers/courses.js');
@@ -20,7 +22,6 @@ const authRouters = require('./routers/auth.js');
 const varMiddleware = require('./middleware/variables.js')
 const userMiddleware = require('./middleware/user.js')
 
-const MONGODB_URI = 'mongodb+srv://greens1593:y98QNb2JGHoFKyjq@cluster0.cqytwgl.mongodb.net/onlineShop';
 const app = express();
 
 const hbs = exphbs.create({
@@ -31,7 +32,7 @@ const hbs = exphbs.create({
 
 const store = new MongoStore({
     collection: 'sessions',
-    uri: MONGODB_URI
+    uri: keys.MONGODB_URI,
 })
 
 app.engine('hbs', hbs.engine);
@@ -43,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({
-    secret: 'some secret value',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store,
@@ -61,14 +62,12 @@ app.use('/orders', ordersRouters);
 app.use('/auth', authRouters);
 
 
-const pasword = 'y98QNb2JGHoFKyjq'
-
 
 const PORT = process.env.PORT || 3000
 
 async function start () {
    try {   
-        await mongoose.connect(MONGODB_URI, {
+        await mongoose.connect(keys.MONGODB_URI, {
             useNewUrlParser: true
             })
         app.listen(PORT, () => 
