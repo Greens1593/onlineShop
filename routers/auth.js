@@ -3,13 +3,14 @@ const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
 const sendgrid = require('nodemailer-sendgrid-transport')
 const crypto = require('crypto')
-const {body, validationResult} = require('express-validator')
+const {validationResult} = require('express-validator')
 
 const keys = require('../keys')
 const User = require('../models/user.js')
 const regEmail = require('../emails/registration.js')
 const resetEmail = require('../emails/reset.js')
 const user = require('../models/user.js')
+const {registerValidators} = require('../utils/validators.js')
 const router = Router()
 
 const transporter = nodemailer.createTransport(sendgrid({
@@ -59,7 +60,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/register', body('email').isEmail(), async (req, res) => {
+router.post('/register', registerValidators, async (req, res) => {
     try{
         const {email, password, confirm, name} = req.body;
         const candidate = await User.findOne({email})
