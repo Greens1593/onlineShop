@@ -1,5 +1,6 @@
 const {body} = require('express-validator')
 const User = require('../models/user.js')
+const bcrypt = require('bcryptjs')
 
 exports.registerValidators = [
     body('email')
@@ -15,6 +16,7 @@ exports.registerValidators = [
         }
     })
     .normalizeEmail(),
+
     body('password', 'Пароль должен состоять не мение чем из 6 символов')
     .isLength({min: 6, max: 56})
     .isAlphanumeric()
@@ -27,7 +29,37 @@ exports.registerValidators = [
         return true
     })
     .trim(),
+
     body('name', 'Имя должно состоять не мение чем из трех символов')
     .isLength({min: 3})
+    .trim()
+]
+
+exports.authValidators = [
+    body('email')
+        .custom(async (value, {req})=>{
+        try{
+            const candidate = await User.findOne({email: value})
+            if(!candidate) {
+                return Promise.reject('Такого пользователя не существует')
+            }
+        } catch(e){
+            console.log(e)
+        }
+    }),
+
+    body('password')
+        .custom(async (value, {req})=>{
+        try{
+            const candidate = await User.findOne({email: req.body.email});
+            const password = value;
+            const areSame = await bcrypt.compare(password, candidate.password) || null
+            if(!areSame) {
+                return Promise.reject('Неверный пароль. Проверте язык и регистр ввода')
+            }
+        } catch(e){
+            console.log(e)
+        }
+    })
     .trim()
 ]

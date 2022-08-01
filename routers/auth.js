@@ -10,7 +10,7 @@ const User = require('../models/user.js')
 const regEmail = require('../emails/registration.js')
 const resetEmail = require('../emails/reset.js')
 const user = require('../models/user.js')
-const {registerValidators} = require('../utils/validators.js')
+const {registerValidators, authValidators} = require('../utils/validators.js')
 const router = Router()
 
 const transporter = nodemailer.createTransport(sendgrid({
@@ -32,30 +32,25 @@ router.get('/logout', async (req, res) => {
     })
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', authValidators, async (req, res) => {
+    
+    const errors = validationResult(req)
+        if(!errors.isEmpty()){
+            req.flash('loginError', errors.array()[0].msg)
+            return res.status(422).redirect('/auth/login#login')
+        }
+
     try{
-        const {email, password} = req.body;
-        const candidate = await User.findOne({email})
-        if(candidate){
-            const areSame = await bcrypt.compare(password, candidate.password) 
-            if(areSame){
-                req.session.user = candidate;
-                req.session.isAuthenticated = true;
-                req.session.save(err => {
-        if (err) {
-            throw err
-        }
-        res.redirect('/')
-    })
-            } else {
-                req.flash('loginError', 'Неверный пароль. Проверте язык и регистр ввода')
-                res.redirect('/auth/login#login')    
+        const {email} = req.body;
+        const candidate = await User.findOne({email});
+        req.session.user = candidate;
+        req.session.isAuthenticated = true;
+        req.session.save(err => {
+            if (err) {
+                throw err
             }
-        } else {
-            req.flash('loginError', 'Такого пользователя не существует')
-            res.redirect('/auth/login#login')
-        }
-    } catch(e){
+        res.redirect('/')
+    })} catch(e){
         console.log(e)
     }
 })
