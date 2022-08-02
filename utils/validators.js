@@ -63,3 +63,9 @@ exports.authValidators = [
     })
     .trim()
 ]
+
+exports.courseValidators = [
+    body('title', 'Минимальная длина названия не должна быть меньше 3 символов').isLength({min: 3}).trim(),
+    body('price', 'Введите корректную цену').isNumeric(),
+    body('img').isURL().withMessage('Введите корректный utl-адрес изображения')
+]

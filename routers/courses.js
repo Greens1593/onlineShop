@@ -1,6 +1,9 @@
 const {Router} = require('express');
-const Course = require('../models/course')
-const auth = require('../middleware/auth.js')
+const {validationResult} = require('express-validator');
+const Course = require('../models/course');
+const auth = require('../middleware/auth.js');
+const {courseValidators} = require('../utils/validators.js');
+
 const router = Router()
 
 function isOwner (course, req) {
@@ -36,15 +39,32 @@ router.get('/:id', async (req, res)=>{
     }
 })
 
-router.post('/edit', auth, async (req, res) =>{
+router.post('/edit', auth, courseValidators, async (req, res) =>{
+    const data = req.body;
+    const title = data.title.toString().slice(0)
+    console.log(title)
+
+    const errors = validationResult(req)
+        if(!errors.isEmpty()){
+            return res.status(422).render('course-edit', {
+                title: 'Добавить курс',
+                isAdd: true,
+                error: errors.array()[0].msg,
+                course: {
+                    title: title,
+                    price: data.price,
+                    img: data.img,
+                }
+            })
+        }
+
     try{ 
-        const {id} = req.body
         delete req.body.id
-        const course = await Course.findById(id)
+        const course = await Course.findById(data.id)
         if(!isOwner(course, req)){
             return res.redirect('/courses')
         }
-        await Course.findByIdAndUpdate(id, req.body)
+        await Course.findByIdAndUpdate(data.id, req.body)
         res.redirect('/courses')
     }catch(e){
         console.log(e)
