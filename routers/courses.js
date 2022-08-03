@@ -39,32 +39,21 @@ router.get('/:id', async (req, res)=>{
     }
 })
 
-router.post('/edit', auth, courseValidators, async (req, res) =>{
-    const data = req.body;
-    const title = data.title.toString().slice(0)
-    console.log(title)
-
+router.post('/edit', auth, courseValidators, async (req, res) =>{   
     const errors = validationResult(req)
+    const {id} = req.body
         if(!errors.isEmpty()){
-            return res.status(422).render('course-edit', {
-                title: 'Добавить курс',
-                isAdd: true,
-                error: errors.array()[0].msg,
-                course: {
-                    title: title,
-                    price: data.price,
-                    img: data.img,
-                }
-            })
+            req.flash('editError', errors.array()[0].msg)
+            return res.status(422).redirect(`/courses/${id}/edit?allow=true`)
         }
 
     try{ 
         delete req.body.id
-        const course = await Course.findById(data.id)
+        const course = await Course.findById(id)
         if(!isOwner(course, req)){
             return res.redirect('/courses')
         }
-        await Course.findByIdAndUpdate(data.id, req.body)
+        await Course.findByIdAndUpdate(id, req.body)
         res.redirect('/courses')
     }catch(e){
         console.log(e)
