@@ -18,6 +18,7 @@ const coursesRouters = require('./routers/courses.js');
 const addRouters = require('./routers/add.js');
 const ordersRouters = require('./routers/orders.js');
 const authRouters = require('./routers/auth.js');
+const profileRouters = require('./routers/profile.js')
 
 const varMiddleware = require('./middleware/variables.js')
 const userMiddleware = require('./middleware/user.js')
@@ -62,6 +63,7 @@ app.use('/add', addRouters);
 app.use('/card', cardRouters);
 app.use('/orders', ordersRouters);
 app.use('/auth', authRouters);
+app.use('/profile', profileRouters)
 
 
 app.use(middleware404);
