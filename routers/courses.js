@@ -84,6 +84,7 @@ router.get('/:id/edit', auth, async (req, res)=>{
 
         res.render('course-edit',{
             title: `Редактировать курс ${course.title}`,
+            editError: req.flash('editError'),
             course
         })
     } catch (e) {
