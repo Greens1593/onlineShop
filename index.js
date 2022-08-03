@@ -21,6 +21,7 @@ const authRouters = require('./routers/auth.js');
 
 const varMiddleware = require('./middleware/variables.js')
 const userMiddleware = require('./middleware/user.js')
+const middleware404 = require('./middleware/error404.js')
 
 const app = express();
 
@@ -61,6 +62,9 @@ app.use('/add', addRouters);
 app.use('/card', cardRouters);
 app.use('/orders', ordersRouters);
 app.use('/auth', authRouters);
+
+
+app.use(middleware404);
 
 
 
