@@ -6,7 +6,8 @@ const exphbs = require('express-handlebars');
 const _handlebars = require('handlebars');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const hemlet = require('helmet')
+const hemlet = require('helmet');
+const compression = require('compression');
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 const session = require('express-session');
 const MongoStore = require('connect-mongodb-session')(session)
@@ -60,6 +61,8 @@ app.use(fileMiddleware.single('avatar'))
 app.use(csrf())
 app.use(flash())
 app.use(hemlet())
+app.use(compression())
+
 app.use(varMiddleware)
 app.use(userMiddleware)
 
