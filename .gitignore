@@ -1,2 +1,3 @@
-keys/
+keys/keys.dev.js
+keys/test.html
 node_modules
