@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "npm run build-server"
+    "build": "NODE_ENV=production node index.js"
   },
   "author": "Green",
   "license": "ISC",
